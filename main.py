@@ -8,7 +8,7 @@ def main():
   raw_data = fetch_btc_data(start_date="2019-01-01")
   
   print("🛠️ Engineering Time-Series Features...")
-  featured\_data = create\_features(raw\_data)
+  featured_data = create_features(raw_data)
   
   print("📈 Running Walk-Forward Backtest with XGBoost Ensemble...")
   results, metrics = walk_forward_backtest(featured_data, initial_train_size=1000, step_size=30)
