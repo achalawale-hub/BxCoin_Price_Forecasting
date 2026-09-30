@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd 
 
-def create\_features(df: pd.DataFrame, target\_horizon: int = 1) -&gt; pd.DataFrame:
+def create_features(df: pd.DataFrame, target=_horizon: int = 1) -> pd.DataFrame:
   data = df.copy() 
   data['log\_price'] = np.log(data['Close']) 
   data['log\_return'] = data['log\_price'].diff()
@@ -9,17 +9,16 @@ def create\_features(df: pd.DataFrame, target\_horizon: int = 1) -&gt; pd.DataFr
 
 
   for window in [5, 10, 15, 30]:
-    data[f'ret\_mean\_{window}'] = data['log\_return'].rolling(window).mean() 
-    data[f'ret\_std\_{window}'] = data['log\_return'].rolling(window).std() 
-    data[f'price\_sma\_{window}'] = data['Close'].rolling(window).mean() / data['Close'] 
+   df[f'ret_mean_{window}'] = df['log_return'].rolling(window).mean() 
+  df[f'ret_std_{window}'] = df['log_return'].rolling(window).std() 
+  df[f'price_sma_{window}'] = df['Close'].rolling(window).mean() / df['Close']  
 
 
  for lag in range(1, 8):
-   data[f'lag\_return\_{lag}'] = data['log\_return'].shift(lag) 
-   data[f'lag\_volume\_{lag}'] = np.log1p(data['Volume']).diff().shift(lag) 
- delta = data['Close'].diff() 
- gain = (delta.where(delta &gt; 0, 0)).rolling(14).mean() 
- loss = (-delta.where(delta &lt; 0, 0)).rolling(14).mean() 
- rs = gain / (loss + 1e-8) 
+   df[f'lag_return_{lag}'] = df['log_return'].shift(lag) 
+    df[f'lag_volume_{lag}'] = np.log1p(df['Volume']).diff().shift(lag) 
+  delta = data['Close'].diff() 
+ gain = (delta.where(delta > 0, 0)).rolling(14).mean() 
+loss = (-delta.where(delta < 0, 0)).rolling(14).mean() 
  data['RSI'] = 100 - (100 / (1 + rs)) 
  return data.dropna()
